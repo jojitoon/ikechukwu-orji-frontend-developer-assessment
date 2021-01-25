@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <modal name="guess-modal">
+    <modal name="guess-modal" :adaptive="true" class="modal">
       <h2 v-if="loading"><img alt="Loading" src="../assets/loader.gif" /></h2>
+      <h2 v-if="errorMessage">Try again...</h2>
       <div v-if="selected">
         <h1>{{ selected.name }}</h1>
         <p v-if="!selected.country.length">No Guess...</p>
@@ -12,24 +13,26 @@
         </ul>
       </div>
     </modal>
-    <table id="users">
-      <thead>
-        <tr>
-          <th @click="sort('name')">Name</th>
-          <th @click="sort('email')">Breed</th>
-          <th @click="sort('gender')">Gender</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in sortedUsers" v-bind:key="user.id">
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.gender }}</td>
-          <button class="btn" @click="guess(user.name)">guess</button>
-        </tr>
-      </tbody>
-    </table>
+    <div class="parent">
+      <table id="users">
+        <thead>
+          <tr>
+            <th @click="sort('name')">Name</th>
+            <th @click="sort('email')">Breed</th>
+            <th @click="sort('gender')">Gender</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="user in sortedUsers" v-bind:key="user.id">
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.gender }}</td>
+            <button class="btn" @click="guess(user.name)">guess</button>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <p>
       <button v-if="currentPage > 1" class="btn prev" @click="prevPage">Previous</button>
       <button v-if="isNotLastPage" class="btn next" @click="nextPage">Next</button>
@@ -64,6 +67,7 @@ export default class Users extends Vue {
   private currentPage = 1;
   private loading = false;
   private selected: Result | null = null;
+  private errorMessage = "";
 
   created() {
     this.users = userData;
@@ -109,8 +113,9 @@ export default class Users extends Vue {
         this.selected = res;
         this.loading = false;
       })
-      .catch(() => {
+      .catch((err: Error) => {
         this.loading = false;
+        this.errorMessage = err.message;
       });
   }
   show() {
@@ -168,5 +173,20 @@ export default class Users extends Vue {
 }
 .prev {
   background-color: #df2f2f;
+}
+.parent {
+  width: 100vw;
+  overflow: auto;
+}
+.modal {
+  display: flex;
+  flex-direction: column;
+}
+.modal ul {
+  display: flex;
+  flex-wrap: wrap;
+}
+.modal ul li {
+  margin: 5px;
 }
 </style>

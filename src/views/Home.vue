@@ -16,3 +16,13 @@ import Users from "@/components/Users.vue";
 })
 export default class Home extends Vue {}
 </script>
+
+<style>
+.home {
+  display: flex;
+  flex-direction: column;
+}
+.home h1 {
+  margin: auto;
+}
+</style>
