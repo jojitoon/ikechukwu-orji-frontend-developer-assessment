@@ -18,7 +18,7 @@
         <thead>
           <tr>
             <th @click="sort('name')">Name</th>
-            <th @click="sort('email')">Breed</th>
+            <th @click="sort('email')">Email</th>
             <th @click="sort('gender')">Gender</th>
             <th></th>
           </tr>
